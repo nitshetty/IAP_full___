@@ -1,0 +1,42 @@
+cd backend; docker build -t fastapi-backend . 
+docker run --env-file backend/.env -p 8000:8000 fastapi-backend                     inside backend no need to build again if api key is changed
+
+docker build -t fastapi-backend -f backend/Dockerfile backend
+
+docker pull python:3.12-slim try this 				 outside backend
+docker run -p 8000:8000 fastapi-backend 			command to run
+
+jaishriram@12345
+
+nitshe@12
+
+admin@example.com
+admin basic for agentic
+
+ramm@example.com
+ram
+enterprise
+editor for langu
+
+user@example.com
+user
+admin,teams for image usecase
+
+user2@example.com
+user
+viewer,teams for sentiment
+
+for correct code in backend using video ka correctcode folder
+import secrets 
+
+# Generate a secure random secret key
+secret_key = secrets.token_urlsafe(32)
+print(secret_key)
+
+
+C:\Users\nitshetty\Desktop\project
+sqlite3 app.db
+
+
+
+

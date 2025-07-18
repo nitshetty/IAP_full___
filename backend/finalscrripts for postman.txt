@@ -1,0 +1,117 @@
+pm.test("Sentiment - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Sentiment - Response is an array", () => {
+    pm.expect(res).to.be.an('array').that.is.not.empty;
+});
+
+pm.test("Sentiment - Each item has summary and percentage", () => {
+    res.forEach((item, index) => {
+        pm.expect(item).to.have.property("summary");
+        pm.expect(item.summary).to.be.a("string").and.not.to.be.empty;
+
+        pm.expect(item).to.have.property("percentage");
+        pm.expect(item.percentage).to.be.an("object");
+
+        const keys = ["Positive", "Negative", "Neutral"];
+        keys.forEach(k => {
+            pm.expect(item.percentage).to.have.property(k);
+            pm.expect(item.percentage[k]).to.be.a("number");
+        });
+    });
+});
+
+pm.test("Translation - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Translation - Translated text exists", () => {
+    pm.expect(res).to.have.property("translated_text");
+});
+
+pm.test("Image Classification - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Image Classification - Product predicted", () => {
+    pm.expect(res).to.be.an('array').that.is.not.empty;
+
+    const first = res[0]
+
+    pm.expect(first).to.have.property("product_name");
+    pm.expect(first).to.have.property("category");
+
+    pm.expect(first.product_name).to.be.a("string").and.to.not.equal('');
+    pm.expect(first.category).to.be.a("string").and.to.not.be.equal('');
+});
+
+
+pm.test("Agentic Product Search - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Agentic Product Search - Has message", () => {
+    pm.expect(res).to.have.property("message");
+});
+
+pm.test("Agentic Product Search - Has products array", () => {
+    pm.expect(res.products).to.be.an("array");
+});
+
+pm.test("Signup - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Signup - User has email", () => {
+    pm.expect(res).to.have.property("email");
+});
+
+let res;
+try
+{
+    res=pm.response.json()
+    let token = res.access_token;
+
+    if(token)
+    {
+        pm.environment.set("ACCESS_TOKEN",token);
+        console.log("tokensaved to ACCESS_TOKEN:",token);
+    } else{
+        console.error("access_token not found");
+    }
+} catch(e){
+    console.error("failed to parse login response:",e);
+}
+
+pm.test("Forgot Password - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Forgot Password - Message present", () => {
+    pm.expect(res).to.have.property("message");
+});
+
+
+pm.test("Reset Password - Status is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+let res = pm.response.json();
+
+pm.test("Reset Password - Success message", () => {
+    pm.expect(res.message).to.be.a("string");
+});
+
