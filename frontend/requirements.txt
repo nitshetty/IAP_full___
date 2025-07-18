@@ -1,0 +1,17 @@
+streamlit
+requests
+pymupdf
+python-docx
+pillow
+pytesseract
+PyPDF2
+starlette
+fastapi
+uvicorn
+pydantic
+python-multipart
+email-validator
+sqlalchemy
+python-jose
+passlib[bcrypt]
+easyocr
