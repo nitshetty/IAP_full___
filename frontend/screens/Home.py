@@ -13,7 +13,7 @@ def app():
         unsafe_allow_html=True
     )
     
-    # Add Login and Signup buttons at the top-right if not authenticated
+    # Login and Signup buttons at the top-right if not authenticated
     if not st.session_state.get("authenticated", False):
         col1, col2, col3 = st.columns([8,1,1])
         with col2:

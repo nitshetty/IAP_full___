@@ -53,7 +53,7 @@ def chat_product_search():
                 else:
                     st.markdown(msg["content"])
 
-    # Show Clear Chat button only after first assistant response
+    #Clear Chat button 
     if any(m["role"] == "assistant" for m in st.session_state.chat_history):
         if st.button("Clear Chat"):
             st.session_state.chat_history = []

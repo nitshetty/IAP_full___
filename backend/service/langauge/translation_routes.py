@@ -81,10 +81,10 @@ async def language_translation(
             raise HTTPException(status_code=400, detail="Unsupported file format. Use TXT, PDF, or DOCX.")
 
     # LOGGING: Print the extracted text for debugging
-    print("[DEBUG] Extracted text from file:", repr(text))
+    print("Extracted text from file:", repr(text))
     text = text.strip()
     if not text:
-        print("[DEBUG] No text found after extraction.")
+        print("No text found after extraction.")
         raise HTTPException(status_code=400, detail="No text found in the document or input.")
     match = db.query(LanguageTranslation).filter(
         LanguageTranslation.input_lang == input_lang.lower(),

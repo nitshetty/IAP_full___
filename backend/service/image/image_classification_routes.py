@@ -62,7 +62,6 @@ async def image_classification(
 
     # Initialize unique dictionary
     unique = {}
-
     if ocr_text:
         words = [w for w in ocr_text.split() if len(w) > 2]
         if words:
@@ -85,7 +84,8 @@ async def image_classification(
         "[{product_name: ..., category: ...}]. "
         "The category must be one of: 'food', 'beverage', or 'other'. "
         "Choose only one category for each product. Do not use combined or ambiguous categories. "
-        "Use external knowledge to ensure logical consistency."
+        "Use external knowledge and common sense to ensure logical consistency. "
+        "If you are unsure, use your best judgment and general world knowledge."
     )
 
     for attempt in range(MAX_RETRIES):

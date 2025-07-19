@@ -15,8 +15,9 @@ def image_classification():
     <p style='color:#CCCCCC; margin-bottom:10px;'>A wholesale food company wants to classify their product images – name of the food and categorise under food/beverage.</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Removed file type restriction to allow all files to be uploaded
+
+    st.subheader("Step 1: Upload Image")
+    # file type restriction to allow all files to be uploaded
     uploaded_image = st.file_uploader("Upload an image", key="image_upload")
 
     if uploaded_image:
@@ -25,20 +26,29 @@ def image_classification():
             st.error("Only .jpg and .png formats are supported.")
             return
 
-        # Ensure the file is sent as multipart/form-data
-        uploaded_image.seek(0)  # Reset file pointer to the beginning
-        files = {"file": (uploaded_image.name, uploaded_image, uploaded_image.type)}
-
-        # Show uploaded image preview
-        st.image(Image.open(io.BytesIO(uploaded_image.read())), caption="Uploaded Image", use_container_width=True)
-        uploaded_image.seek(0)  # Reset file pointer again for the request
-
-        # Validate file content before previewing
+        # Validate file size (max 10MB)
         uploaded_image.seek(0)
-        if len(uploaded_image.read()) <= 7:
-            st.error("Uploaded image is invalid or empty.")
+        file_size = len(uploaded_image.read())
+        uploaded_image.seek(0)
+        
+        if file_size == 0:
+            st.error("Uploaded image is empty.")
             return
-        uploaded_image.seek(0)  # Reset file pointer again
+        
+        if file_size > 10 * 1024 * 1024:  # 10MB limit
+            st.error("Image file is too large. Please upload an image smaller than 10MB.")
+            return
+
+        # Ensure the file is sent as multipart/form-data
+        files = {"file": (uploaded_image.name, uploaded_image, uploaded_image.type)}        # Show uploaded image preview
+        try:
+            st.image(Image.open(io.BytesIO(uploaded_image.read())), caption="Uploaded Image", use_container_width=True)
+            uploaded_image.seek(0)  # Reset file pointer for the request
+        except Exception as e:
+            st.error(f"Error displaying image: {e}")
+            return
+
+        st.subheader("Step 2: Classify Image")
 
         if st.button("Classify"):
             token = st.session_state.get("access_token")
@@ -67,5 +77,5 @@ def image_classification():
             else:
                 st.error(f"Image classification failed: {response.text}")
 
-# Ensure the Streamlit page renders by calling the main function
+# Streamlit page renders by calling the main function
 image_classification()

@@ -22,16 +22,16 @@ class AuthManager:
     @staticmethod
     def authenticate_user(db: Session, email: str, password: str):
         user = db.query(User).filter(User.email == email).first()
-        print(f"[DEBUG] DB user lookup for email={email}: {user}")
+        print(f"DB user lookup for email={email}: {user}")
         if not user:
-            print(f"[DEBUG] No user found for email={email}")
+            print(f"No user found for email={email}")
             return None
         password_ok = verify_password(password, user.hashed_password)
-        print(f"[DEBUG] Password verification for {email}: {password_ok}")
+        print(f"Password verification for {email}: {password_ok}")
         if not password_ok:
-            print(f"[DEBUG] Password mismatch for {email}")
+            print(f"Password mismatch for {email}")
             return None
-        print(f"[DEBUG] User authenticated: {email}")
+        print(f"User authenticated: {email}")
         return user
 
     @staticmethod

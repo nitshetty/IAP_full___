@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 from utils.config import BACKEND_URL
+from docx import Document
+import io
 
 def app():
     st.markdown("<h1 style='text-align:center;'>Language Translation</h1>", unsafe_allow_html=True)
@@ -12,10 +14,12 @@ def app():
     """, unsafe_allow_html=True)
 
     st.subheader("Step 1: Enter Languages")
+    st.info("You can enter language names (e.g., English, French) or language codes (e.g., en, fr, es, de)")
     input_lang = st.text_input("Enter input language (e.g., English, es, fr, etc.)", key="input_lang_text")
     output_lang = st.text_input("Enter output language (e.g., French, en, de, etc.)", key="output_lang_text")
 
     st.subheader("Step 2: Upload or Enter Text")
+    st.info("Please provide either text input OR upload a file, not both.")
     uploaded_file = st.file_uploader("Upload a document (.pdf, .docx, .txt)", type=["pdf", "docx", "txt"])
     text_input = st.text_area("Or enter text manually", key="language_translation_text_input")
 
@@ -24,8 +28,27 @@ def app():
     download_format = st.selectbox("Select output type", options=download_options, key="output_type_select")
 
     if st.button("Translate"):
+        # Validate that languages are provided
+        if not input_lang.strip():
+            st.error("Please enter the input language.")
+            st.stop()
+        
+        if not output_lang.strip():
+            st.error("Please enter the output language.")
+            st.stop()
+        
+        # Validate that input and output languages are different
+        if input_lang.strip().lower() == output_lang.strip().lower():
+            st.error("Input language and output language cannot be the same.")
+            st.stop()
+        
+        # Validate that user provides either text OR file, not both
+        if uploaded_file and text_input.strip():
+            st.error("Please provide either text input OR upload a file, not both.")
+            st.stop()
+        
         if not uploaded_file and not text_input.strip():
-            st.warning("Please enter or upload valid text.")
+            st.error("Please provide either text input OR upload a file.")
             st.stop()
 
         # Validate download_format
@@ -41,7 +64,7 @@ def app():
         headers = {"Authorization": f"Bearer {token}"}
         response = None
 
-        # If file is uploaded, send it to backend (let backend handle extraction, including OCR)
+        # file is uploaded
         if uploaded_file:
             files = {"file": uploaded_file}
             data = {
@@ -85,8 +108,6 @@ def app():
 
             elif content_type.strip().lower() == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
                 try:
-                    from docx import Document
-                    import io
                     doc = Document(io.BytesIO(response.content))
                     translated_text = "\n".join([para.text for para in doc.paragraphs])
                 except Exception as e:
@@ -109,11 +130,11 @@ def app():
                     st.error("Unknown response format from backend.")
                     st.stop()
 
-            # Show the translated text in the UI only if 'string' is selected
+            # Show the translated text 
             if download_format == "string":
                 st.subheader("Translated Output")
                 st.text_area("Translated Text", translated_text, height=200)
-            # Show download button if file was returned
+            # Show download button 
             if download_label and download_data:
                 st.download_button(
                     label=download_label,

@@ -20,12 +20,12 @@ def signup(user_in: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    print(f"[DEBUG] Login attempt: username={form_data.username}")
+    print(f"Login attempt: username={form_data.username}")
     user = AuthManager.authenticate_user(db, form_data.username, form_data.password)
     if not user:
-        print(f"[DEBUG] Invalid credentials for: {form_data.username}")
+        print(f"Invalid credentials for: {form_data.username}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    print(f"[DEBUG] Login successful for: {form_data.username}")
+    print(f"Login successful for: {form_data.username}")
     access_token = AuthManager.create_access_token(data={"sub": user.email, "role": user.role.value, "license": user.license.value})
     return {"access_token": access_token, "token_type": "bearer"}
 

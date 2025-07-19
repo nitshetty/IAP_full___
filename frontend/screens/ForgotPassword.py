@@ -16,7 +16,7 @@ def app():
     with col3:
         reset_password_clicked = st.button("Reset Password", use_container_width=True)
 
-    # Logic for generating reset token
+    # generating reset token
     if generate_clicked:
         if not email:
             st.error("Email is required.please provide it.")
@@ -34,7 +34,7 @@ def app():
             except Exception:
                 st.error("Server error. Please try again later.")
 
-    # Logic for navigating to Reset Password
+    # navigating to Reset Password
     if reset_password_clicked:
         st.session_state.page = "Reset Password"
         st.rerun()

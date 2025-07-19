@@ -10,7 +10,7 @@ def app():
     email = st.text_input("Email", key="login_email")
     password = st.text_input("Password", type="password", key="login_password")
 
-    # Buttons in one row, shifted properly
+    # Buttons
     col1, col2, col3 = st.columns([2, 6, 2])  # Wider center area
     with col1:
         login_clicked = st.button("Login", use_container_width=True)

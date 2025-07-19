@@ -101,7 +101,7 @@ async def agentic_product_search(
                 if p["name"] not in seen_names:
                     seen_names.add(p["name"])
                     p["id"] = synthetic_id
-                    synthetic_product_map[synthetic_id] = p["name"]  # Store mapping
+                    synthetic_product_map[synthetic_id] = p["name"]  # this is Store mapping
                     synthetic_id += 1
                     unique_products.append(p)
                 if len(unique_products) >= 3:
@@ -135,7 +135,7 @@ async def agentic_product_search(
         else:
             # If not in DB, assume synthetic product (IDs start from 10001)
             if product_id and product_id >= 10001:
-                product_name = synthetic_product_map.get(product_id)  # Get name from map
+                product_name = synthetic_product_map.get(product_id)  # this is Get name from map
         if product_name:
             return AgenticProductSearchOut(message=f"Successfully purchased: {product_name}", products=[], purchased=True)
         else:

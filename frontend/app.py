@@ -19,16 +19,15 @@ st.set_page_config(page_title="AI Use Case Portal", layout="wide")
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "page" not in st.session_state:
-    st.session_state.page = "Home"  # Set default to Home
+    st.session_state.page = "Home"  # Setting default to Home
 if "user_email" not in st.session_state:
     st.session_state.user_email = None
 
-# Moved the requests.post line into a placeholder function for proper context
 def make_request(data):
     response = requests.post("http://backend:8000/endpoint", json=data)
     return response
 
-# Home page: Only show Login and Signup buttons
+# Home page
 if st.session_state.page == "Home":
     st.title("Welcome to the AI Use Case Portal")
     st.write("")
@@ -43,7 +42,7 @@ if st.session_state.page == "Home":
             st.rerun()
     st.stop()
 
-# Routing for Login, Signup, Forgot/Reset Password, and authenticated flow
+# Routing for Login, Signup, Forgot/Reset Password
 if st.session_state.page == "Login":
     Login.app()
 elif st.session_state.page == "Signup":

@@ -25,6 +25,4 @@ def app():
             if response.status_code == 200:
                 st.success("User registered successfully")
             else:
-                st.error(response.json()["detail"])
-
-# Do not auto-run the signup page unless explicitly called from app.py
+                st.error(response.json().get("detail", "Signup failed. Please try again."))
