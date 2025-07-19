@@ -24,7 +24,6 @@ RUN python -m textblob.download_corpora && \
 # Copy environment variables (Groq and others)
 COPY .env .env
 
-
 # Copy backend code
 COPY . .
 
