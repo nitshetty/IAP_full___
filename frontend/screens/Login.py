@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from utils.auth import save_token
 from utils.config import BACKEND_URL
+import jwt
 
 def app():
     st.title("Login")
@@ -22,8 +23,15 @@ def app():
         response = requests.post(f"{BACKEND_URL}/login", data={"username": email, "password": password})
         if response.status_code == 200:
             token_data = response.json()
-            save_token(token_data['access_token'], None, None)
-            st.success("Login successful")
+            try:
+                decoded = jwt.decode(token_data['access_token'], options={"verify_signature": False})
+                role = decoded.get("role")
+                license = decoded.get("license")
+            except Exception as e:
+                role = None
+                license = None
+            save_token(token_data['access_token'], role, license)
+            st.success(f"Login successful. Role: {role}, License: {license}")
             st.session_state.authenticated = True
             st.session_state.page = "ServiceSelection"
             st.rerun()

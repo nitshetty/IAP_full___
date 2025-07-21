@@ -55,16 +55,28 @@ elif st.session_state.page == "Reset Password":
 # Service Selection page after login
 if st.session_state.get("authenticated", False) and st.session_state.page == "ServiceSelection":
     st.title("Select a Service")
-    service_options = [
-        "Language Translation",
-        "Sentiment Analysis",
-        "Image Classification",
-        "Agentic Product Search"
-    ]
-    selected_service = st.selectbox("Choose a service:", service_options, key="service_selectbox")
+    # Define service access rules
+    service_access = {
+        "Language Translation": {"roles": ["Editor"], "licenses": ["Enterprise"]},
+        "Sentiment Analysis": {"roles": ["Viewer"], "licenses": ["Teams"]},
+        "Image Classification": {"roles": ["Admin"], "licenses": ["Teams"]},
+        "Agentic Product Search": {"roles": ["Admin"], "licenses": ["Basic"]},
+    }
+    user_role = st.session_state.get("role")
+    user_license = st.session_state.get("license")
+    all_services = list(service_access.keys())
+    selected_service = st.selectbox("Choose a service:", all_services, key="service_selectbox")
     if st.button("Go", key="service_go_btn"):
-        st.session_state.page = selected_service
-        st.rerun()
+        access = service_access[selected_service]
+        if user_role in access["roles"] and user_license in access["licenses"]:
+            st.session_state.page = selected_service
+            st.rerun()
+        else:
+            needed_roles = ", ".join(access["roles"])
+            needed_licenses = ", ".join(access["licenses"])
+            st.error("You do not have access to this service.")
+            st.info(f"Current role: {user_role}\nCurrent license: {user_license}")
+            st.info(f"Required role(s): {needed_roles}\nRequired license(s): {needed_licenses}")
     st.stop()
 
 # Use case routing (only if authenticated)
@@ -85,15 +97,11 @@ def logout_button_footer():
 if st.session_state.get("authenticated", False):
     if st.session_state.page == "Home":
         Home.app()
-        logout_button_footer()
     elif st.session_state.page == "Language Translation":
         LanguageTranslation.app()
-        logout_button_footer()
     elif st.session_state.page == "Sentiment Analysis":
         SentimentAnalysis.app()
-        logout_button_footer()
     elif st.session_state.page == "Image Classification":
         ImageClassification.app()
-        logout_button_footer()
     elif st.session_state.page == "Agentic Product Search":
         Agentic_Product_Search.app()

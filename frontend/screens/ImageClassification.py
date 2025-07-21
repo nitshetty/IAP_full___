@@ -8,6 +8,18 @@ def app():
     image_classification()
     
 def image_classification():
+    col_spacer, col_service, col_logout = st.columns([7, 2, 1])
+    with col_service:
+        if st.button("Go to Service Selection", key="go_service_selection"):
+            st.session_state.page = "ServiceSelection"
+            st.rerun()
+    with col_logout:
+        if st.button("Logout", key="logout_btn"):
+            st.session_state.authenticated = False
+            st.session_state.user_email = None
+            st.session_state.access_token = None
+            st.session_state.page = "Login"
+            st.rerun()
     st.markdown("<h1 style='text-align:center;'>Image Classification</h1>", unsafe_allow_html=True)
     st.markdown("""
     <div style='background-color:#1E1E1E; padding:15px; margin-bottom:20px; border-radius:10px; border-left:4px solid #4CAF50;'>

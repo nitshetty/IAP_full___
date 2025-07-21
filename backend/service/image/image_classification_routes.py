@@ -127,6 +127,12 @@ async def image_classification(
                 print(f"Parsed result is not a list: {parsed}")
                 raise HTTPException(status_code=500, detail="Parsed result is not a list.")
 
+            
+            # List of known brands/restaurants to always categorize as 'other'
+            known_brands = {
+                "mcdonald's", "starbucks", "burger king", "kfc", "subway", "domino's", "pizza hut", "wendy's", "taco bell", "dunkin", "chipotle", "panera bread", "papa john's", "arbys", "jack in the box", "chick-fil-a", "five guys", "hardee's", "carls jr", "little caesars", "sonic", "a&w", "tim hortons", "jollibee", "in-n-out", "shake shack", "costa coffee", "pret a manger",
+                "krispy kreme", "peet's coffee", "cinnabon", "dairy queen", "el pollo loco", "wingstop", "red robin", "outback steakhouse", "buffalo wild wings", "panda express", "sbarro", "long john silver's", "baskin robbins", "dave & buster's", "ihop", "applebee's", "olive garden", "tgi friday's", "cheesecake factory", "benihana", "hooters", "ruby tuesday", "zaxby's", "raising cane's", "culver's", "bojangles", "jamba", "smoothie king", "firehouse subs", "jersey mike's", "potbelly", "blaze pizza", "mod pizza", "sweetgreen", "tropical smoothie cafe", "jimmy john's", "quiznos", "schlotzsky's", "togo's", "blimpie", "auntie anne's", "church's chicken", "denny's"
+            }
             # Deduplicate by product_name (add to same unique dict)
             for item in parsed:
                 product = item.get("product_name", "unknown").strip().lower()
@@ -135,12 +141,9 @@ async def image_classification(
                     print(f"Skipping invalid product or category: {item}")
                     continue
 
-                # Validate against database dynamically
-                db_result = db.query(ImageLabel).filter(ImageLabel.product_name.ilike(f"%{product}%")).first()
-                if db_result:
-                    category = db_result.category
-                else:
-                    print(f"No database match found for product: {product}")
+                # Override category for known brands/restaurants
+                if product in known_brands:
+                    category = "other"
 
                 if product not in unique:
                     unique[product] = ImageLabelOut(product_name=product, category=category)

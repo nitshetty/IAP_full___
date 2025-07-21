@@ -8,7 +8,11 @@ def app():
     chat_product_search()
 
 def chat_product_search():
-    col_spacer, col_logout= st.columns([8, 1])
+    col_spacer, col_service, col_logout = st.columns([7, 2, 1])
+    with col_service:
+        if st.button("Go to Service Selection", key="go_service_selection"):
+            st.session_state.page = "ServiceSelection"
+            st.rerun()
     with col_logout:
         if st.button("Logout", key="logout_btn"):
             st.session_state.authenticated = False
