@@ -15,13 +15,12 @@ COPY requirements.txt ./requirements.txt
 #install Python dependencies
 RUN pip install --default-timeout=100 --no-cache-dir -r requirements.txt
 
-
 # Download NLTK/TextBlob corpora
 RUN python -m textblob.download_corpora && \
     python -c "import nltk; nltk.download('brown'); nltk.download('punkt'); nltk.download('wordnet'); nltk.download('averaged_perceptron_tagger')"
 
 
-# Copy environment variables (Groq and others)
+# Copy environment variables (Groq)
 COPY .env .env
 
 # Copy backend code
