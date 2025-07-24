@@ -3,7 +3,7 @@ import requests
 from utils.config import BACKEND_URL
 
 def app():
-    col_spacer, col_login = st.columns([8, 2])
+    col_spacer, col_login, col_login = st.columns([7, 2, 1])
     with col_login:
         if st.button("Login", key="login_btn"):
             st.session_state.authenticated = False
