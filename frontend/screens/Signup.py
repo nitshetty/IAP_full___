@@ -3,6 +3,14 @@ import requests
 from utils.config import BACKEND_URL
 
 def app():
+    col_spacer, col_login = st.columns([8, 2])
+    with col_login:
+        if st.button("Already have an account?", key="login_btn"):
+            st.session_state.authenticated = False
+            st.session_state.user_email = None
+            st.session_state.access_token = None
+            st.session_state.page = "Login"
+            st.rerun()
     st.title("Sign Up")
     email = st.text_input("Email", key="signup_email")
     password = st.text_input("Password", type="password", key="signup_password")

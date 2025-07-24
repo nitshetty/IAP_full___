@@ -5,6 +5,14 @@ from utils.config import BACKEND_URL
 import jwt
 
 def app():
+    col_spacer, col_login = st.columns([8, 2])
+    with col_login:
+        if st.button("Don't have an account?", key="login_btn"):
+            st.session_state.authenticated = False
+            st.session_state.user_email = None
+            st.session_state.access_token = None
+            st.session_state.page = "Signup"
+            st.rerun()
     st.title("Login")
 
     # Inputs
