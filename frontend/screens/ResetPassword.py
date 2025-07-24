@@ -3,6 +3,14 @@ import requests
 from utils.config import BACKEND_URL
 
 def app():
+    col_spacer, col_login = st.columns([8, 2])
+    with col_login:
+        if st.button("Login", key="login_btn"):
+            st.session_state.authenticated = False
+            st.session_state.user_email = None
+            st.session_state.access_token = None
+            st.session_state.page = "Login"
+            st.rerun()
     st.title("Reset Password")
     email = st.text_input("Email", key="reset_password_email")
     token = st.text_input("Reset Token", key="reset_token")
