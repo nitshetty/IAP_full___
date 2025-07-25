@@ -73,7 +73,11 @@ async def image_classification(
                 if key not in unique:
                     unique[key] = ImageLabelOut(product_name=r.product_name, category=r.category)
 
-    # Vision-Language Fallback
+    # If products found in DB, return them directly
+    if unique:
+        return list(unique.values())
+
+    # Only run Groq if DB did not return any products
     client = Groq(api_key=os.getenv("GROQ_API_KEY"))
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
     image_path = f"data:image/jpeg;base64,{base64_image}"
@@ -127,7 +131,6 @@ async def image_classification(
                 print(f"Parsed result is not a list: {parsed}")
                 raise HTTPException(status_code=500, detail="Parsed result is not a list.")
 
-            
             # List of known brands/restaurants to always categorize as 'other'
             known_brands = {
                 "mcdonald's", "starbucks", "burger king", "kfc", "subway", "domino's", "pizza hut", "wendy's", "taco bell", "dunkin", "chipotle", "panera bread", "papa john's", "arbys", "jack in the box", "chick-fil-a", "five guys", "hardee's", "carls jr", "little caesars", "sonic", "a&w", "tim hortons", "jollibee", "in-n-out", "shake shack", "costa coffee", "pret a manger",
